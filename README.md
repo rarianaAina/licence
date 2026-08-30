@@ -124,3 +124,14 @@ pnpm build       # dist/ en ESM, CJS et types
 ```
 
 Voir [MIGRATION.md](MIGRATION.md) pour brancher une application existante.
+
+## Pourquoi `dist/` est versionné
+
+Ce paquet s'installe depuis Git, sans registre npm. pnpm refuse alors
+d'exécuter le script de construction d'une dépendance distante — à raison :
+un `prepare` téléchargé exécute du code chez qui installe.
+
+Le résultat de la construction est donc livré avec les sources. Il n'a pas le
+droit de dériver : `pnpm verifier-dist` reconstruit et échoue si le contenu
+diffère, et la CI l'exécute à chaque poussée. Un `dist/` en retard d'une
+correction de sécurité serait pire que pas de `dist/` du tout.

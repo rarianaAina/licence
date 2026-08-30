@@ -29,7 +29,7 @@
     "test:watch": "vitest",
     "lint": "prettier --check .",
     "format": "prettier --write .",
-    "prepare": "pnpm build"
+    "verifier-dist": "pnpm build && git diff --exit-code -- dist"
   },
   "devDependencies": {
     "prettier": "^3.4.2",
