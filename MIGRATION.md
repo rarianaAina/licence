@@ -98,7 +98,7 @@ permet pas ».
 Avant de publier quoi que ce soit :
 
 ```bash
-cd licence && pnpm test        # 115 épreuves, dont la clé réellement vendue
+cd licence && pnpm test        # 117 épreuves, dont la clé réellement vendue
 ```
 
 Puis, dans la caisse, vérifier **avec la clé LOVELEC réelle** que l'écran de

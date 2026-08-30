@@ -118,7 +118,7 @@ les produits est écrit **dans** la charge signée, pas dans la clé qui signe.
 
 ```bash
 pnpm install
-pnpm test        # 115 épreuves
+pnpm test        # 117 épreuves
 pnpm typecheck
 pnpm build       # dist/ en ESM, CJS et types
 ```
