@@ -1,0 +1,38 @@
+name: Contrôles
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Format
+        run: pnpm lint
+
+      - name: Types
+        run: pnpm typecheck
+
+      # Les épreuves comprennent la clé réellement vendue à un client :
+      # une régression sur la compatibilité ascendante casse ici, pas au
+      # téléphone un samedi.
+      - name: Épreuves
+        run: pnpm test
+
+      - name: Construction
+        run: pnpm build

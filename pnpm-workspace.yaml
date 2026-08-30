@@ -1,0 +1,4 @@
+# pnpm bloque les scripts d’installation par défaut ; seul esbuild en a
+# réellement besoin (binaire natif de tsup et de vitest).
+allowBuilds:
+  esbuild: true
