@@ -12,7 +12,7 @@ import type { Produit } from '../produit.js';
  * De même, les plafonds s'appellent `caisses` et `boutiques` : ce sont les noms
  * sous lesquels les anciens champs `r` et `b` sont relus.
  */
-export const CAISSE: Produit = {
+export const CAISSE = {
   code: 'caisse',
   nom: 'Caisse',
   prefixe: 'CAISSE',
@@ -102,4 +102,13 @@ export const CAISSE: Produit = {
 
   essaiJours: 30,
   graceJours: 15,
-};
+} as const satisfies Produit;
+
+/**
+ * Clés des fonctions de ce produit, comme type.
+ *
+ * L'application les emploie plutôt que `string` : demander une fonction qui
+ * n'existe pas devient une erreur de compilation, et non un module qui reste
+ * fermé sans que personne comprenne pourquoi.
+ */
+export type FonctionCaisse = (typeof CAISSE)['fonctions'][number]['cle'];

@@ -22,10 +22,10 @@
 /** Une fonction vendable, telle qu'elle se présente à l'éditeur. */
 export interface Fonction {
   /** Identifiant écrit dans la clé. Immuable une fois vendu. */
-  cle: string;
-  libelle: string;
+  readonly cle: string;
+  readonly libelle: string;
   /** Ce que le client obtient. Sert l'outil d'émission, pas le logiciel. */
-  description: string;
+  readonly description: string;
   /**
    * Fonction indispensable, toujours incluse.
    *
@@ -33,17 +33,17 @@ export interface Fonction {
    * ajouté d'office à toute formule, et l'outil d'émission ne permet pas de le
    * retirer.
    */
-  noyau?: boolean;
+  readonly noyau?: boolean;
 }
 
 /** Un plafond nommé : postes, boutiques, utilisateurs… */
 export interface Quota {
-  cle: string;
-  libelle: string;
+  readonly cle: string;
+  readonly libelle: string;
   /** Valeur retenue quand la clé n'en dit rien. Prudente par construction. */
-  defaut: number;
+  readonly defaut: number;
   /** Borne haute acceptée à l'émission, pour attraper une faute de frappe. */
-  max: number;
+  readonly max: number;
 }
 
 /**
@@ -54,26 +54,36 @@ export interface Quota {
  * peut recevoir une combinaison qui ne porte aucun nom.
  */
 export interface Formule {
-  libelle: string;
-  fonctions: string[];
+  readonly libelle: string;
+  readonly fonctions: readonly string[];
   /** Plafonds proposés d'office. L'éditeur les corrige à la vente. */
-  quotas?: Record<string, number>;
+  readonly quotas?: Readonly<Record<string, number>>;
 }
 
+/**
+ * Un logiciel vendu.
+ *
+ * Tout y est en lecture seule, pour que chaque descripteur puisse être déclaré
+ * `as const satisfies Produit` : les clés de ses fonctions redeviennent alors
+ * des littéraux, et l'application qui l'utilise se fait reprendre à la
+ * compilation si elle demande une fonction qui n'existe pas. Une faute de
+ * frappe dans un nom de fonction ne se voit pas autrement — elle ferme
+ * silencieusement un module que le client a payé.
+ */
 export interface Produit {
   /** Écrit dans chaque clé. Immuable. */
-  code: string;
+  readonly code: string;
   /** Nom commercial, affiché partout. */
-  nom: string;
+  readonly nom: string;
   /** En-tête des clés : `CAISSE`, `BOUTIQUE`… Majuscules et chiffres. */
-  prefixe: string;
-  fonctions: Fonction[];
-  quotas: Quota[];
-  formules: Record<string, Formule>;
+  readonly prefixe: string;
+  readonly fonctions: readonly Fonction[];
+  readonly quotas: readonly Quota[];
+  readonly formules: Readonly<Record<string, Formule>>;
   /** Durée de la période d'essai, en jours. */
-  essaiJours: number;
+  readonly essaiJours: number;
   /** Délai de grâce après l'échéance, en jours. */
-  graceJours: number;
+  readonly graceJours: number;
 }
 
 /** Clés des fonctions du produit. */

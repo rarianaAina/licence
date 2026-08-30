@@ -16,7 +16,7 @@ import { BOUTIQUE } from './produits/boutique.js';
  * format des clés ne bouge pas, la clé publique ne bouge pas, les licences
  * déjà émises ne bougent pas.
  */
-export const PRODUITS: Produit[] = [CAISSE, BOUTIQUE];
+export const PRODUITS: readonly Produit[] = [CAISSE, BOUTIQUE];
 
 export const CATALOGUE: Record<string, Produit> = Object.fromEntries(
   PRODUITS.map((produit) => [produit.code, produit]),
@@ -39,3 +39,13 @@ export function nomDuProduit(code: string): string {
 }
 
 export { CAISSE, BOUTIQUE };
+
+/**
+ * Les clés de fonctions de chaque produit, comme types.
+ *
+ * Une application les emploie plutôt que `string` : demander une fonction qui
+ * n'existe pas devient une erreur de compilation, et non un module qui reste
+ * fermé sans que personne comprenne pourquoi.
+ */
+export type { FonctionCaisse } from './produits/caisse.js';
+export type { FonctionBoutique } from './produits/boutique.js';

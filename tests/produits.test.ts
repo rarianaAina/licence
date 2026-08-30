@@ -11,6 +11,7 @@ import {
   problemeDescripteur,
   produitPar,
   quotasDeFormule,
+  type Produit,
 } from '../src/index.js';
 
 describe('catalogue', () => {
@@ -117,46 +118,73 @@ describe('plafonds d’un produit', () => {
 });
 
 describe('descripteur fautif', () => {
-  const base = () => ({ ...CAISSE, formules: { ...CAISSE.formules } });
+  // Typé `Produit` et non figé : ces épreuves déforment volontairement un
+  // descripteur valable pour vérifier que le défaut se voit.
+  const base = (modifications: Partial<Produit> = {}): Produit => ({ ...CAISSE, ...modifications });
 
   it('refuse un code produit qui ne tient pas dans une clé', () => {
-    expect(problemeDescripteur({ ...base(), code: 'Ma Caisse' })).toMatch(/Code produit invalide/);
+    expect(problemeDescripteur(base({ code: 'Ma Caisse' }))).toMatch(/Code produit invalide/);
   });
 
   it('refuse un préfixe contenant un tiret', () => {
     // Le tiret sépare le préfixe du numéro de version : « MA-CAISSE-2 » ne se
     // découperait pas.
-    expect(problemeDescripteur({ ...base(), prefixe: 'MA-CAISSE' })).toMatch(/Préfixe invalide/);
+    expect(problemeDescripteur(base({ prefixe: 'MA-CAISSE' }))).toMatch(/Préfixe invalide/);
+  });
+
+  it('refuse une clé de fonction qui ne tient pas dans une clé', () => {
+    expect(
+      problemeDescripteur(
+        base({ fonctions: [{ cle: 'Ma Fonction', libelle: 'x', description: 'x' }] }),
+      ),
+    ).toMatch(/Fonction invalide/);
   });
 
   it('refuse une fonction en double', () => {
-    const produit = base();
-    produit.fonctions = [...produit.fonctions, produit.fonctions[0]!];
-    expect(problemeDescripteur(produit)).toMatch(/en double/);
+    const doublon = { cle: 'sale', libelle: 'Vente', description: 'x' };
+    expect(problemeDescripteur(base({ fonctions: [doublon, doublon] }))).toMatch(/en double/);
   });
 
   it('refuse une formule qui ouvre une fonction inexistante', () => {
-    const produit = base();
-    produit.formules = { bancal: { libelle: 'Bancal', fonctions: ['inexistante'] } };
-    expect(problemeDescripteur(produit)).toMatch(/fonction inconnue/);
+    expect(
+      problemeDescripteur(
+        base({ formules: { bancal: { libelle: 'Bancal', fonctions: ['inexistante'] } } }),
+      ),
+    ).toMatch(/fonction inconnue/);
   });
 
   it('refuse une formule qui fixe un plafond inexistant', () => {
-    const produit = base();
-    produit.formules = {
-      bancal: { libelle: 'Bancal', fonctions: ['sale'], quotas: { ateliers: 2 } },
-    };
-    expect(problemeDescripteur(produit)).toMatch(/plafond inconnu/);
+    expect(
+      problemeDescripteur(
+        base({
+          formules: {
+            bancal: { libelle: 'Bancal', fonctions: ['sale'], quotas: { ateliers: 2 } },
+          },
+        }),
+      ),
+    ).toMatch(/plafond inconnu/);
+  });
+
+  it('refuse un plafond en double', () => {
+    const plafond = { cle: 'caisses', libelle: 'Caisses', defaut: 1, max: 10 };
+    expect(problemeDescripteur(base({ quotas: [plafond, plafond], formules: {} }))).toMatch(
+      /Plafond en double/,
+    );
   });
 
   it('refuse un défaut hors des bornes du plafond', () => {
-    const produit = base();
-    produit.quotas = [{ cle: 'caisses', libelle: 'Caisses', defaut: 0, max: 10 }];
-    expect(problemeDescripteur(produit)).toMatch(/entre 1 et 10/);
+    expect(
+      problemeDescripteur(
+        base({
+          quotas: [{ cle: 'caisses', libelle: 'Caisses', defaut: 0, max: 10 }],
+          formules: {},
+        }),
+      ),
+    ).toMatch(/entre 1 et 10/);
   });
 
   it('refuse un produit qui ne vend rien', () => {
-    expect(problemeDescripteur({ ...base(), fonctions: [], formules: {} })).toMatch(
+    expect(problemeDescripteur(base({ fonctions: [], formules: {} }))).toMatch(
       /ne vend aucune fonction/,
     );
   });

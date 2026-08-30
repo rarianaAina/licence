@@ -13,7 +13,7 @@ import type { Produit } from '../produit.js';
  * licence qui promet une porte inexistante se retourne contre l'éditeur le jour
  * où le client demande à la voir.
  */
-export const BOUTIQUE: Produit = {
+export const BOUTIQUE = {
   code: 'boutique',
   nom: 'Gestion de boutique',
   prefixe: 'BOUTIQUE',
@@ -108,4 +108,13 @@ export const BOUTIQUE: Produit = {
 
   essaiJours: 30,
   graceJours: 15,
-};
+} as const satisfies Produit;
+
+/**
+ * Clés des fonctions de ce produit, comme type.
+ *
+ * L'application les emploie plutôt que `string` : demander une fonction qui
+ * n'existe pas devient une erreur de compilation, et non un module qui reste
+ * fermé sans que personne comprenne pourquoi.
+ */
+export type FonctionBoutique = (typeof BOUTIQUE)['fonctions'][number]['cle'];

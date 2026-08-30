@@ -1,6 +1,6 @@
 {
   "name": "@licence/noyau",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Clés d'activation signées, communes à tous les logiciels de l'éditeur.",
   "type": "module",
   "main": "./dist/index.cjs",
