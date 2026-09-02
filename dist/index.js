@@ -81,7 +81,7 @@ function decodeLicence(cle) {
 }
 var jour = 864e5;
 var auJour = (iso) => Date.parse(`${iso.slice(0, 10)}T00:00:00.000Z`);
-function licenceState(payload, produit, companyId, now) {
+function licenceState(payload, produit, companyId, now, options = {}) {
   if (payload.p !== produit.code) {
     return {
       state: "autre-produit",
@@ -91,7 +91,8 @@ function licenceState(payload, produit, companyId, now) {
       reason: `Cette cl\xE9 a \xE9t\xE9 \xE9mise pour ${nommerProduit(payload.p)}, pas pour ${produit.nom}.`
     };
   }
-  if (payload.c !== installationCode(companyId)) {
+  const codeAttendu = options.codeInstallation?.trim() || installationCode(companyId);
+  if (payload.c !== codeAttendu) {
     return {
       state: "autre-entreprise",
       payload,
@@ -162,7 +163,9 @@ async function verifyLicence(cle, options) {
       reason: "Signature invalide : cette cl\xE9 n\u2019a pas \xE9t\xE9 \xE9mise par l\u2019\xE9diteur."
     };
   }
-  return licenceState(decoded.payload, options.produit, options.companyId, now);
+  return licenceState(decoded.payload, options.produit, options.companyId, now, {
+    codeInstallation: options.codeInstallation
+  });
 }
 function trialStatus(installedAt, produit, now) {
   const debut = auJour(installedAt);

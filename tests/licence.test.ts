@@ -404,3 +404,84 @@ describe('vérification complète', () => {
     expect(statut.state).toBe('invalide');
   });
 });
+
+describe('poste rattaché à une autre installation', () => {
+  /**
+   * Une licence est vendue à une ENTREPRISE, pas à une machine — le produit
+   * déclare d'ailleurs un quota « postes rattachés ». Un commerçant qui
+   * installe le logiciel sur une seconde machine doit pouvoir y présenter la
+   * clé qu'il a déjà payée.
+   */
+  it('accepte la clé du poste auquel il est rattaché', async () => {
+    const { privee, publique } = await paireDeTest();
+    const cle = await emettreDeTest(BOUTIQUE, privee, { code: installationCode('poste-1') });
+
+    // Sans rattachement : refusée, elle vise une autre installation.
+    const seul = await verifyLicence(cle, {
+      publicKeySpki: publique,
+      produit: BOUTIQUE,
+      companyId: 'poste-2',
+    });
+    expect(seul.state).toBe('autre-entreprise');
+
+    // Rattaché : acceptée.
+    const rattache = await verifyLicence(cle, {
+      publicKeySpki: publique,
+      produit: BOUTIQUE,
+      companyId: 'poste-2',
+      codeInstallation: installationCode('poste-1'),
+    });
+    expect(rattache.state).toBe('valide');
+  });
+
+  it('n’accepte pas pour autant n’importe quelle clé', async () => {
+    // LE POINT IMPORTANT : le rattachement ne dit pas « accepte tout », il dit
+    // « ce poste se présente sous ce code-là ». Une clé émise pour un
+    // troisième poste reste refusée.
+    const { privee, publique } = await paireDeTest();
+    const cle = await emettreDeTest(BOUTIQUE, privee, { code: installationCode('poste-3') });
+
+    const statut = await verifyLicence(cle, {
+      publicKeySpki: publique,
+      produit: BOUTIQUE,
+      companyId: 'poste-2',
+      codeInstallation: installationCode('poste-1'),
+    });
+    expect(statut.state).toBe('autre-entreprise');
+  });
+
+  it('ne contourne ni la signature ni le produit ni l’échéance', async () => {
+    const { privee, publique } = await paireDeTest();
+    const code = installationCode('poste-1');
+    const options = {
+      publicKeySpki: publique,
+      produit: BOUTIQUE,
+      companyId: 'poste-2',
+      codeInstallation: code,
+    };
+
+    // Signature : une clé trafiquée reste invalide.
+    const bonne = await emettreDeTest(BOUTIQUE, privee, { code });
+    const trafiquee = `${bonne.slice(0, -4)}AAAA`;
+    expect((await verifyLicence(trafiquee, options)).state).toBe('invalide');
+
+    // Échéance : une clé périmée reste périmée.
+    const perimee = await emettreDeTest(BOUTIQUE, privee, { code });
+    const bienPlusTard = Date.parse('2027-06-01T12:00:00.000Z');
+    expect((await verifyLicence(perimee, { ...options, now: bienPlusTard })).state).not.toBe(
+      'valide',
+    );
+  });
+
+  it('un code adopté vide revient au code du poste lui-même', async () => {
+    const { privee, publique } = await paireDeTest();
+    const cle = await emettreDeTest(BOUTIQUE, privee, { code: installationCode('poste-2') });
+    const statut = await verifyLicence(cle, {
+      publicKeySpki: publique,
+      produit: BOUTIQUE,
+      companyId: 'poste-2',
+      codeInstallation: '   ',
+    });
+    expect(statut.state).toBe('valide');
+  });
+});

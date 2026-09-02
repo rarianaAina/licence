@@ -297,7 +297,9 @@ interface LicenceStatus {
  * l'échéance en dernier : à qui a collé la clé d'un autre logiciel, on ne parle
  * pas d'une date d'expiration qui ne le concerne pas.
  */
-declare function licenceState(payload: LicencePayload, produit: Produit, companyId: string, now: number): LicenceStatus;
+declare function licenceState(payload: LicencePayload, produit: Produit, companyId: string, now: number, options?: {
+    codeInstallation?: string;
+}): LicenceStatus;
 interface VerificationOptions {
     /** Clé publique de l'éditeur, en SPKI base64, embarquée dans l'application. */
     publicKeySpki: string;
@@ -305,6 +307,28 @@ interface VerificationOptions {
     produit: Produit;
     /** Identifiant d'entreprise de cette installation. */
     companyId: string;
+    /**
+     * Code d'installation ADOPTÉ, quand ce poste est rattaché à un autre.
+     *
+     * POURQUOI CELA EXISTE. Une licence est vendue à une entreprise, pas à une
+     * machine : le descripteur de produit déclare d'ailleurs un quota « postes
+     * rattachés ». Mais chaque installation tire son propre identifiant, et son
+     * code en dérive : un commerçant qui installe le logiciel sur une seconde
+     * machine — un ordinateur de plus, une tablette — se voyait refuser la clé
+     * qu'il a payée.
+     *
+     * Le code ne se déduit pas de l'identifiant en sens inverse : la dérivation
+     * replie soixante-quatre bits en quarante-huit, et rien ne permet de
+     * remonter. Le poste rattaché retient donc le code visé, et c'est LUI qu'on
+     * compare.
+     *
+     * CE N'EST PAS UNE FAILLE, et la distinction compte : ce champ ne dit pas
+     * « accepte n'importe quelle clé », il dit « ce poste se présente sous ce
+     * code-là ». La signature reste vérifiée, le produit reste vérifié,
+     * l'échéance reste vérifiée. Ce qu'il faut posséder pour rattacher un poste,
+     * c'est la CLÉ — que seul le client détient.
+     */
+    codeInstallation?: string;
     now?: number;
 }
 /**
