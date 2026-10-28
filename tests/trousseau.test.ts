@@ -118,7 +118,8 @@ describe('refus', () => {
 
   it('détecte une altération du texte chiffré', async () => {
     const scelle = JSON.parse(await sealTrousseau(await contenuDeTest(), PHRASE, TOURS));
-    scelle.data = `A${scelle.data.slice(1)}`;
+    // Remplacer par un signe DIFFÉRENT : un « A » sur un « A » ne changerait rien.
+    scelle.data = `${scelle.data.startsWith('A') ? 'B' : 'A'}${scelle.data.slice(1)}`;
     await expect(openTrousseau(JSON.stringify(scelle), PHRASE)).rejects.toThrow(TrousseauError);
   });
 

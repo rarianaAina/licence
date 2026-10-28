@@ -104,3 +104,7 @@ cd licence && pnpm test        # 117 épreuves, dont la clé réellement vendue
 Puis, dans la caisse, vérifier **avec la clé LOVELEC réelle** que l'écran de
 licence l'accepte encore. C'est le seul contrôle qui compte : le reste se
 rattrape, une clé refusée chez un client qui a payé ne se rattrape pas.
+
+> Depuis le changement de clé du 28 octobre 2026 (voir le README), la clé
+> LOVELEC n'est plus acceptée par la caisse : ce contrôle se fait désormais
+> avec une clé émise par le nouveau trousseau.

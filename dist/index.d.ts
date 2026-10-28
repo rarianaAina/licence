@@ -818,7 +818,11 @@ declare function emitLicence(produit: Produit, demande: EmissionRequest, privee:
  *
  * La remplacer invaliderait d'un coup toutes les licences déjà émises, chez
  * tous les clients. Elle ne bouge donc jamais.
+ *
+ * Une seule exception, le 28 octobre 2026 : la phrase de passe du premier
+ * trousseau a été perdue, et aucune licence n'était encore en service. La clé
+ * a été réengendrée ; l'ancienne ne survit que dans `tests/cle-reelle.test.ts`.
  */
-declare const LICENCE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJTF5i99Fi0L8WmdtEPwMLbgO2inqdZBg+AWtOTTBlLMfvBr6EEf1j1rub447Kj3iUSDPT2Ny9JSmm4or7j0OFw==";
+declare const LICENCE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC13AWEULsoRVAKSeFNEEuIe7bm3EItia/wsRN3IfQgXtOKeJ30lVmPiHy2phqOmyxT6ldp6mAAA4XGBFWt/Zeg==";
 
 export { BOUTIQUE, CAISSE, CATALOGUE, type ClockVerdict, type DecodedLicence, type Emission, EmissionError, type EmissionRequest, type Fonction, type FonctionBoutique, type FonctionCaisse, type Formule, LICENCE_GRACE_DAYS, LICENCE_PUBLIC_KEY, LICENCE_TRIAL_DAYS, LICENCE_VERSION, LICENCE_WARN_DAYS, type LicencePayload, type LicencePayloadV1, type LicenceState, type LicenceStatus, PRODUITS, PRODUIT_HISTORIQUE, type Produit, type Quota, RATCHET_MAX_JUMP_DAYS, type RegistreEntry, TROUSSEAU_ITERATIONS, TROUSSEAU_MAGIC, TROUSSEAU_MAGIC_V1, type TrousseauContent, TrousseauError, type TrousseauFile, type VerificationOptions, addMonths, buildPayload, decodeLicence, emitLicence, encodeLicence, fonctionsDe, fonctionsDeFormule, importSigningKey, installationCode, judgeClock, licenceAllows, licenceBlocks, licenceQuota, licenceState, nomDuProduit, normaliserCharge, normaliserEntree, noyauDe, openTrousseau, passphraseProblem, prefixePour, problemeDescripteur, produitPar, quota, quotasDeFormule, sealTrousseau, signPayload, trialStatus, verifyLicence };

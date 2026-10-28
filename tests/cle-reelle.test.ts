@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   BOUTIQUE,
   CAISSE,
-  LICENCE_PUBLIC_KEY,
   decodeLicence,
   installationCode,
   licenceState,
@@ -11,15 +10,25 @@ import {
 } from '../src/index.js';
 
 /**
- * La clé RÉELLEMENT vendue à LOVELEC le 20 août 2026.
+ * Clé publique qui a signé la clé LOVELEC — la première de l'éditeur.
+ *
+ * Elle a été remplacée le 28 octobre 2026 (phrase de passe du trousseau
+ * perdue, aucune licence en service) et n'est plus embarquée nulle part. Elle
+ * ne survit qu'ici : c'est la seule à pouvoir authentifier une vraie clé v1, et
+ * la lecture du format v1 doit rester éprouvée tant qu'il existe.
+ */
+const LICENCE_PUBLIC_KEY =
+  'MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEJTF5i99Fi0L8WmdtEPwMLbgO2inqdZBg+AWtOTTBlLMfvBr6EEf1j1rub447Kj3iUSDPT2Ny9JSmm4or7j0OFw==';
+
+/**
+ * La clé émise pour LOVELEC le 20 août 2026, au format de version 1.
  *
  * Elle est reproduite ici parce qu'aucune épreuve fabriquée ne peut prouver ce
- * qui compte : que le nouveau format lit encore, avec la vraie clé publique de
- * l'éditeur, une clé déjà entre les mains d'un client. Une régression sur ce
- * point ne se découvrirait qu'au téléphone, un samedi.
+ * qui compte : que le nouveau format lit encore une clé v1 réellement émise,
+ * avec la clé publique qui l'a signée.
  *
- * Elle n'est pas un secret : elle est déjà chez son propriétaire, elle ne vaut
- * que pour son installation, et la lire ne permet pas d'en fabriquer d'autres.
+ * Elle n'est pas un secret : elle ne vaut que pour son installation, et la
+ * lire ne permet pas d'en fabriquer d'autres.
  *
  * L'identifiant d'entreprise correspondant, lui, est chez le client et
  * n'appartient pas à ce dépôt. On ne peut donc pas éprouver ici le cas
@@ -32,7 +41,7 @@ const CLE_LOVELEC =
 
 const CODE_LOVELEC = '5889-FF08-54DA';
 
-describe('clé réellement vendue, format de version 1', () => {
+describe('clé émise pour LOVELEC, format de version 1', () => {
   it('se décode encore', () => {
     const decodee = decodeLicence(CLE_LOVELEC);
     expect(decodee).not.toBeNull();
@@ -51,7 +60,7 @@ describe('clé réellement vendue, format de version 1', () => {
   });
 
   it('porte une signature authentique de l’éditeur', async () => {
-    // Vérifiée contre la VRAIE clé publique embarquée dans les applications.
+    // Vérifiée contre la clé publique qui l'a signée (l'ancienne, voir en tête).
     // Le refus porte sur l'entreprise, PAS sur la signature : la charge a donc
     // été authentifiée avant d'en arriver là. Si la vérification cassait, on
     // lirait « invalide » ici.

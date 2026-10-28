@@ -93,10 +93,18 @@ La version 1 ne disait pas **pour quel logiciel** la clé avait été émise. Ta
 qu'un seul produit existait, cela ne se voyait pas ; au deuxième, une clé de
 caisse ouvrait la boutique — le client paie une fois, reçoit tout.
 
-Les clés v1 déjà chez les clients restent valides : elles sont lues comme des
-clés de caisse, ce qu'elles étaient, et leurs plafonds `r` et `b` retrouvent
-leurs noms `caisses` et `boutiques`. `tests/cle-reelle.test.ts` le vérifie sur
-la clé réellement vendue à LOVELEC, contre la vraie clé publique.
+Les clés v1 restent lisibles : elles sont lues comme des clés de caisse, ce
+qu'elles étaient, et leurs plafonds `r` et `b` retrouvent leurs noms `caisses`
+et `boutiques`. `tests/cle-reelle.test.ts` le vérifie sur la clé émise pour
+LOVELEC, contre la clé publique qui l'a signée.
+
+## Changement de clé du 28 octobre 2026
+
+La phrase de passe du premier trousseau a été perdue. Aucune licence n'étant
+en service, la clé de l'éditeur a été réengendrée et la clé publique remplacée
+dans ce dépôt et dans les logiciels. Les clés émises avant cette date — dont
+celle de LOVELEC — ne sont plus acceptées par les versions qui embarquent la
+nouvelle clé publique.
 
 ## Le trousseau
 
