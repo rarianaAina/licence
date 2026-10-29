@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  APPLIVE,
   BOUTIQUE,
   CAISSE,
   EmissionError,
@@ -209,6 +210,43 @@ describe('clé signée', () => {
       now: Date.parse('2026-12-01T00:00:00Z'),
     });
     expect(statut.state).toBe('autre-produit');
+  });
+
+  it('ouvre une boutique APPLIVE, liée à son identifiant, sans aucun plafond', async () => {
+    // APPLIVE se vend à la durée : la charge ne porte ni plafond ni fonction
+    // optionnelle, et le code d'installation vient de l'identifiant de la boutique.
+    const { privee, publique } = await paireDeTest();
+    const boutique = '7d4e2a10-3b1c-4f5e-9a8b-1c2d3e4f5a6b';
+    const emission = await emitLicence(
+      APPLIVE,
+      demande({ formule: 'standard', code: installationCode(boutique) }),
+      privee,
+      LE_JOUR,
+    );
+    expect(emission.cle.startsWith('APPLIVE-2.')).toBe(true);
+    expect(emission.payload.q).toEqual({});
+    expect(emission.payload.f).toEqual(['boutique-en-ligne']);
+
+    const options = {
+      publicKeySpki: publique,
+      companyId: boutique,
+      now: Date.parse('2026-12-01T00:00:00Z'),
+    };
+    expect((await verifyLicence(emission.cle, { ...options, produit: APPLIVE })).state).toBe(
+      'valide',
+    );
+    expect((await verifyLicence(emission.cle, { ...options, produit: BOUTIQUE })).state).toBe(
+      'autre-produit',
+    );
+    expect(
+      (
+        await verifyLicence(emission.cle, {
+          ...options,
+          produit: APPLIVE,
+          companyId: 'une-autre-boutique',
+        })
+      ).state,
+    ).toBe('autre-entreprise');
   });
 
   it('reste valable si l’en-tête a été mal recopié', async () => {

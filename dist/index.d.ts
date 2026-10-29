@@ -585,6 +585,47 @@ declare const BOUTIQUE: {
 type FonctionBoutique = (typeof BOUTIQUE)['fonctions'][number]['cle'];
 
 /**
+ * La boutique en ligne des produits présentés en live : catalogue public,
+ * réservation, confirmation par WhatsApp ou Messenger, livraisons regroupées.
+ *
+ * UNE SEULE FONCTION, ET AUCUN PLAFOND. APPLIVE se vend à la durée, tout
+ * compris : la licence ne dit qu'une chose, jusqu'à quand la boutique reste
+ * ouverte. Découper plus tard reste possible sans toucher aux clés déjà
+ * vendues — il suffira d'ajouter des fonctions ; `boutique-en-ligne`, elle,
+ * restera le noyau et ne changera jamais de nom.
+ *
+ * Contrairement à la caisse et à MOBI STOCK, APPLIVE est un service en ligne :
+ * la clé est vérifiée par le serveur, qui garde l'échéance de chaque boutique.
+ * Le code d'installation est celui de la boutique, dérivé de son identifiant.
+ */
+declare const APPLIVE: {
+    readonly code: "applive";
+    readonly nom: "APPLIVE";
+    readonly prefixe: "APPLIVE";
+    readonly fonctions: readonly [{
+        readonly cle: "boutique-en-ligne";
+        readonly libelle: "Boutique en ligne";
+        readonly description: "Catalogue public, réservation de 15 minutes, paiement à la livraison ou Mobile Money, administration. C’est le logiciel : toujours ouvert.";
+        readonly noyau: true;
+    }];
+    readonly quotas: readonly [];
+    readonly formules: {
+        readonly standard: {
+            readonly libelle: "Standard — tout compris";
+            readonly fonctions: readonly ["boutique-en-ligne"];
+        };
+        readonly essai: {
+            readonly libelle: "Essai — tout ouvert";
+            readonly fonctions: readonly ["boutique-en-ligne"];
+        };
+    };
+    readonly essaiJours: 30;
+    readonly graceJours: 15;
+};
+/** Clés des fonctions de ce produit, comme type. */
+type FonctionApplive = (typeof APPLIVE)['fonctions'][number]['cle'];
+
+/**
  * Les logiciels de l'éditeur.
  *
  * POURQUOI UN CATALOGUE COMMUN plutôt qu'un descripteur par dépôt. L'outil
@@ -825,4 +866,4 @@ declare function emitLicence(produit: Produit, demande: EmissionRequest, privee:
  */
 declare const LICENCE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC13AWEULsoRVAKSeFNEEuIe7bm3EItia/wsRN3IfQgXtOKeJ30lVmPiHy2phqOmyxT6ldp6mAAA4XGBFWt/Zeg==";
 
-export { BOUTIQUE, CAISSE, CATALOGUE, type ClockVerdict, type DecodedLicence, type Emission, EmissionError, type EmissionRequest, type Fonction, type FonctionBoutique, type FonctionCaisse, type Formule, LICENCE_GRACE_DAYS, LICENCE_PUBLIC_KEY, LICENCE_TRIAL_DAYS, LICENCE_VERSION, LICENCE_WARN_DAYS, type LicencePayload, type LicencePayloadV1, type LicenceState, type LicenceStatus, PRODUITS, PRODUIT_HISTORIQUE, type Produit, type Quota, RATCHET_MAX_JUMP_DAYS, type RegistreEntry, TROUSSEAU_ITERATIONS, TROUSSEAU_MAGIC, TROUSSEAU_MAGIC_V1, type TrousseauContent, TrousseauError, type TrousseauFile, type VerificationOptions, addMonths, buildPayload, decodeLicence, emitLicence, encodeLicence, fonctionsDe, fonctionsDeFormule, importSigningKey, installationCode, judgeClock, licenceAllows, licenceBlocks, licenceQuota, licenceState, nomDuProduit, normaliserCharge, normaliserEntree, noyauDe, openTrousseau, passphraseProblem, prefixePour, problemeDescripteur, produitPar, quota, quotasDeFormule, sealTrousseau, signPayload, trialStatus, verifyLicence };
+export { APPLIVE, BOUTIQUE, CAISSE, CATALOGUE, type ClockVerdict, type DecodedLicence, type Emission, EmissionError, type EmissionRequest, type Fonction, type FonctionApplive, type FonctionBoutique, type FonctionCaisse, type Formule, LICENCE_GRACE_DAYS, LICENCE_PUBLIC_KEY, LICENCE_TRIAL_DAYS, LICENCE_VERSION, LICENCE_WARN_DAYS, type LicencePayload, type LicencePayloadV1, type LicenceState, type LicenceStatus, PRODUITS, PRODUIT_HISTORIQUE, type Produit, type Quota, RATCHET_MAX_JUMP_DAYS, type RegistreEntry, TROUSSEAU_ITERATIONS, TROUSSEAU_MAGIC, TROUSSEAU_MAGIC_V1, type TrousseauContent, TrousseauError, type TrousseauFile, type VerificationOptions, addMonths, buildPayload, decodeLicence, emitLicence, encodeLicence, fonctionsDe, fonctionsDeFormule, importSigningKey, installationCode, judgeClock, licenceAllows, licenceBlocks, licenceQuota, licenceState, nomDuProduit, normaliserCharge, normaliserEntree, noyauDe, openTrousseau, passphraseProblem, prefixePour, problemeDescripteur, produitPar, quota, quotasDeFormule, sealTrousseau, signPayload, trialStatus, verifyLicence };

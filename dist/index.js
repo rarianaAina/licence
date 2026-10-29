@@ -457,8 +457,36 @@ var BOUTIQUE = {
   graceJours: 15
 };
 
+// src/produits/applive.ts
+var APPLIVE = {
+  code: "applive",
+  nom: "APPLIVE",
+  prefixe: "APPLIVE",
+  fonctions: [
+    {
+      cle: "boutique-en-ligne",
+      libelle: "Boutique en ligne",
+      description: "Catalogue public, r\xE9servation de 15 minutes, paiement \xE0 la livraison ou Mobile Money, administration. C\u2019est le logiciel : toujours ouvert.",
+      noyau: true
+    }
+  ],
+  quotas: [],
+  formules: {
+    standard: {
+      libelle: "Standard \u2014 tout compris",
+      fonctions: ["boutique-en-ligne"]
+    },
+    essai: {
+      libelle: "Essai \u2014 tout ouvert",
+      fonctions: ["boutique-en-ligne"]
+    }
+  },
+  essaiJours: 30,
+  graceJours: 15
+};
+
 // src/catalogue.ts
-var PRODUITS = [CAISSE, BOUTIQUE];
+var PRODUITS = [CAISSE, BOUTIQUE, APPLIVE];
 var CATALOGUE = Object.fromEntries(
   PRODUITS.map((produit) => [produit.code, produit])
 );
@@ -726,6 +754,7 @@ function importSigningKey(jwk) {
 // src/cle-publique.ts
 var LICENCE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC13AWEULsoRVAKSeFNEEuIe7bm3EItia/wsRN3IfQgXtOKeJ30lVmPiHy2phqOmyxT6ldp6mAAA4XGBFWt/Zeg==";
 export {
+  APPLIVE,
   BOUTIQUE,
   CAISSE,
   CATALOGUE,

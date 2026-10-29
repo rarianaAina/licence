@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  APPLIVE,
   BOUTIQUE,
   CAISSE,
   CATALOGUE,
@@ -36,8 +37,9 @@ describe('catalogue', () => {
   it('retrouve un produit par son code', () => {
     expect(produitPar('caisse')).toBe(CAISSE);
     expect(produitPar('boutique')).toBe(BOUTIQUE);
+    expect(produitPar('applive')).toBe(APPLIVE);
     expect(produitPar('inexistant')).toBeNull();
-    expect(Object.keys(CATALOGUE).sort()).toEqual(['boutique', 'caisse']);
+    expect(Object.keys(CATALOGUE).sort()).toEqual(['applive', 'boutique', 'caisse']);
   });
 
   it('rend un code inconnu tel quel plutôt que « inconnu »', () => {
