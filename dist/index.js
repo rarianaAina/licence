@@ -485,8 +485,36 @@ var APPLIVE = {
   graceJours: 15
 };
 
+// src/produits/bureo.ts
+var BUREO = {
+  code: "bureo",
+  nom: "Bureo",
+  prefixe: "BUREO",
+  fonctions: [
+    {
+      cle: "bureau",
+      libelle: "Bureau complet",
+      description: "Factures et pro forma, clients, agenda, notes et rappels, mails, coffre \xE0 mots de passe. C\u2019est le logiciel : toujours ouvert.",
+      noyau: true
+    }
+  ],
+  quotas: [],
+  formules: {
+    standard: {
+      libelle: "Standard \u2014 \xE0 vie, mises \xE0 jour comprises pendant la dur\xE9e choisie",
+      fonctions: ["bureau"]
+    },
+    essai: {
+      libelle: "Essai \u2014 tout ouvert",
+      fonctions: ["bureau"]
+    }
+  },
+  essaiJours: 14,
+  graceJours: 0
+};
+
 // src/catalogue.ts
-var PRODUITS = [CAISSE, BOUTIQUE, APPLIVE];
+var PRODUITS = [CAISSE, BOUTIQUE, APPLIVE, BUREO];
 var CATALOGUE = Object.fromEntries(
   PRODUITS.map((produit) => [produit.code, produit])
 );
@@ -756,6 +784,7 @@ var LICENCE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC13AWEULsoRVAKSeFN
 export {
   APPLIVE,
   BOUTIQUE,
+  BUREO,
   CAISSE,
   CATALOGUE,
   EmissionError,

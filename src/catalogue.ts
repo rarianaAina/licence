@@ -2,6 +2,7 @@ import type { Produit } from './produit.js';
 import { CAISSE } from './produits/caisse.js';
 import { BOUTIQUE } from './produits/boutique.js';
 import { APPLIVE } from './produits/applive.js';
+import { BUREO } from './produits/bureo.js';
 
 /**
  * Les logiciels de l'éditeur.
@@ -17,7 +18,7 @@ import { APPLIVE } from './produits/applive.js';
  * format des clés ne bouge pas, la clé publique ne bouge pas, les licences
  * déjà émises ne bougent pas.
  */
-export const PRODUITS: readonly Produit[] = [CAISSE, BOUTIQUE, APPLIVE];
+export const PRODUITS: readonly Produit[] = [CAISSE, BOUTIQUE, APPLIVE, BUREO];
 
 export const CATALOGUE: Record<string, Produit> = Object.fromEntries(
   PRODUITS.map((produit) => [produit.code, produit]),
@@ -39,7 +40,7 @@ export function nomDuProduit(code: string): string {
   return produitPar(code)?.nom ?? code;
 }
 
-export { CAISSE, BOUTIQUE, APPLIVE };
+export { CAISSE, BOUTIQUE, APPLIVE, BUREO };
 
 /**
  * Les clés de fonctions de chaque produit, comme types.
@@ -51,3 +52,4 @@ export { CAISSE, BOUTIQUE, APPLIVE };
 export type { FonctionCaisse } from './produits/caisse.js';
 export type { FonctionBoutique } from './produits/boutique.js';
 export type { FonctionApplive } from './produits/applive.js';
+export type { FonctionBureo } from './produits/bureo.js';

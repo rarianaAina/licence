@@ -626,6 +626,53 @@ declare const APPLIVE: {
 type FonctionApplive = (typeof APPLIVE)['fonctions'][number]['cle'];
 
 /**
+ * Bureo : le bureau d'un indépendant ou d'une PME sur Windows — factures et pro
+ * forma, agenda, notes et rappels, mails, coffre à mots de passe.
+ *
+ * UNE SEULE FONCTION, ET AUCUN PLAFOND : Bureo se vend tout compris.
+ *
+ * BUREO S'ACHÈTE UNE FOIS, ET L'ÉCHÉANCE N'A PAS LE MÊME SENS QU'AILLEURS.
+ * Pour la caisse ou APPLIVE, `e` est le dernier jour où le logiciel s'ouvre.
+ * Pour Bureo, `e` est le dernier jour des MISES À JOUR COMPRISES : la clé reste
+ * valable à vie pour toute version publiée jusqu'à cette date, et Bureo ne
+ * propose plus les versions publiées après. Le client garde ce qu'il a payé ;
+ * il rachète, s'il le veut, une nouvelle année de nouveautés. `--mois 12` à
+ * l'émission donne donc « à vie, mises à jour pendant un an ».
+ *
+ * D'où `graceJours: 0` : il n'y a pas de blocage à adoucir.
+ *
+ * Bureo n'est pas écrit en TypeScript : il vérifie les clés en Python
+ * (`bureo/licence.py`), avec la même clé publique, le même code d'installation
+ * au bit près, et refuse ce qui ne nomme pas `bureo`.
+ */
+declare const BUREO: {
+    readonly code: "bureo";
+    readonly nom: "Bureo";
+    readonly prefixe: "BUREO";
+    readonly fonctions: readonly [{
+        readonly cle: "bureau";
+        readonly libelle: "Bureau complet";
+        readonly description: "Factures et pro forma, clients, agenda, notes et rappels, mails, coffre à mots de passe. C’est le logiciel : toujours ouvert.";
+        readonly noyau: true;
+    }];
+    readonly quotas: readonly [];
+    readonly formules: {
+        readonly standard: {
+            readonly libelle: "Standard — à vie, mises à jour comprises pendant la durée choisie";
+            readonly fonctions: readonly ["bureau"];
+        };
+        readonly essai: {
+            readonly libelle: "Essai — tout ouvert";
+            readonly fonctions: readonly ["bureau"];
+        };
+    };
+    readonly essaiJours: 14;
+    readonly graceJours: 0;
+};
+/** Clés des fonctions de ce produit, comme type. */
+type FonctionBureo = (typeof BUREO)['fonctions'][number]['cle'];
+
+/**
  * Les logiciels de l'éditeur.
  *
  * POURQUOI UN CATALOGUE COMMUN plutôt qu'un descripteur par dépôt. L'outil
@@ -866,4 +913,4 @@ declare function emitLicence(produit: Produit, demande: EmissionRequest, privee:
  */
 declare const LICENCE_PUBLIC_KEY = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC13AWEULsoRVAKSeFNEEuIe7bm3EItia/wsRN3IfQgXtOKeJ30lVmPiHy2phqOmyxT6ldp6mAAA4XGBFWt/Zeg==";
 
-export { APPLIVE, BOUTIQUE, CAISSE, CATALOGUE, type ClockVerdict, type DecodedLicence, type Emission, EmissionError, type EmissionRequest, type Fonction, type FonctionApplive, type FonctionBoutique, type FonctionCaisse, type Formule, LICENCE_GRACE_DAYS, LICENCE_PUBLIC_KEY, LICENCE_TRIAL_DAYS, LICENCE_VERSION, LICENCE_WARN_DAYS, type LicencePayload, type LicencePayloadV1, type LicenceState, type LicenceStatus, PRODUITS, PRODUIT_HISTORIQUE, type Produit, type Quota, RATCHET_MAX_JUMP_DAYS, type RegistreEntry, TROUSSEAU_ITERATIONS, TROUSSEAU_MAGIC, TROUSSEAU_MAGIC_V1, type TrousseauContent, TrousseauError, type TrousseauFile, type VerificationOptions, addMonths, buildPayload, decodeLicence, emitLicence, encodeLicence, fonctionsDe, fonctionsDeFormule, importSigningKey, installationCode, judgeClock, licenceAllows, licenceBlocks, licenceQuota, licenceState, nomDuProduit, normaliserCharge, normaliserEntree, noyauDe, openTrousseau, passphraseProblem, prefixePour, problemeDescripteur, produitPar, quota, quotasDeFormule, sealTrousseau, signPayload, trialStatus, verifyLicence };
+export { APPLIVE, BOUTIQUE, BUREO, CAISSE, CATALOGUE, type ClockVerdict, type DecodedLicence, type Emission, EmissionError, type EmissionRequest, type Fonction, type FonctionApplive, type FonctionBoutique, type FonctionBureo, type FonctionCaisse, type Formule, LICENCE_GRACE_DAYS, LICENCE_PUBLIC_KEY, LICENCE_TRIAL_DAYS, LICENCE_VERSION, LICENCE_WARN_DAYS, type LicencePayload, type LicencePayloadV1, type LicenceState, type LicenceStatus, PRODUITS, PRODUIT_HISTORIQUE, type Produit, type Quota, RATCHET_MAX_JUMP_DAYS, type RegistreEntry, TROUSSEAU_ITERATIONS, TROUSSEAU_MAGIC, TROUSSEAU_MAGIC_V1, type TrousseauContent, TrousseauError, type TrousseauFile, type VerificationOptions, addMonths, buildPayload, decodeLicence, emitLicence, encodeLicence, fonctionsDe, fonctionsDeFormule, importSigningKey, installationCode, judgeClock, licenceAllows, licenceBlocks, licenceQuota, licenceState, nomDuProduit, normaliserCharge, normaliserEntree, noyauDe, openTrousseau, passphraseProblem, prefixePour, problemeDescripteur, produitPar, quota, quotasDeFormule, sealTrousseau, signPayload, trialStatus, verifyLicence };
